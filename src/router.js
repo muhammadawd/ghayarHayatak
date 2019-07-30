@@ -4,6 +4,7 @@ import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
 import Category from "./views/Category.vue";
 import PlayList from "./views/PlayList.vue";
+import MyVideos from "./views/MyVideos.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 
@@ -43,6 +44,15 @@ export default new Router({
             components: {
                 header: AppHeader,
                 default: PlayList,
+                footer: AppFooter
+            }
+        },
+        {
+            path: '/my_videos/:id/:phone',
+            name: 'my_videos',
+            components: {
+                header: AppHeader,
+                default: MyVideos,
                 footer: AppFooter
             }
         },

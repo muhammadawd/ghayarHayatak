@@ -17,21 +17,7 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="px-4">
-                                <!--                                <div class="row justify-content-center mb-4">-->
-                                <!--                                    <div class="col-lg-3 order-lg-2">-->
-                                <!--                                        <div class="card-profile-image mb-5">-->
-                                <!--                                            <a href="#">-->
-                                <!--&lt;!&ndash;                                                <img v-lazy="'img/icons/collection/2.png'" class="rounded">&ndash;&gt;-->
-                                <!--                                            </a>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-                                <!--                                    <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">-->
-                                <!--                                    </div>-->
-                                <!--                                    <div class="col-lg-4 order-lg-1">-->
-                                <!--                                    </div>-->
-                                <!--                                </div>-->
                                 <div class="text-center">
-                                    <!--                                    <h4 class="font-weight-bold">مركز الارشاد الاسري</h4>-->
                                     <div class="py-5 border-top text-center">
                                         <slot v-if="current_video">
                                             <iframe :src="current_video" frameborder="0" width="100%"
@@ -45,6 +31,9 @@
                             </div>
                         </div>
                         <div class="col-md-5">
+                            <h3 class="m-2 text-right display-3">
+                                فيديوهاتي
+                            </h3>
                             <div class="mt-3">
                                 <slot v-if="is_loading">
                                     <h3 class="text-center">
@@ -53,46 +42,27 @@
                                     </h3>
                                 </slot>
                                 <ul>
-                                    <li v-for="(element,key) in submenu" class="li" :class="key == 0 ? 'opened' : ''">
-                                        <h4 class="font-weight-bold">{{element.title}}</h4>
-                                        <div class="arrow"></div>
-                                        <div class="content">
-                                            <ul>
-                                                <li v-for="video in element.videos">
-                                                    <div class="element">
-                                                        <div class="card shadow-lg--hover mt-1 shadow">
-                                                            <div class="card-body p-2">
-                                                                <div class="px-1  text-right">
-                                                                    <div class="pl-4">
-                                                                        <h5 class="title text-info font-weight-bold">
-                                                                            {{video.title}}</h5>
-                                                                        <div class="h6 font-weight-300">
-                                                                            <div v-html="getRate(video.total_rate)"></div>
-                                                                        </div>
-                                                                        <p>{{video.description}}</p>
-                                                                        <b>تكلفة الفيديو </b>
-                                                                        <b class="text-info"> {{video.price}} <span
-                                                                                class="text-dark">د.ك</span></b>
-                                                                        <br>
-                                                                        <b>عدد مرات المشاهدة</b>
-                                                                        <b class="text-info"> {{video.view_number}} </b>
-
-                                                                        <button v-if="video.is_allowed"
-                                                                                class="btn btn-info float-left pull-left"
-                                                                                @click="check_video(video)">
-                                                                            شاهد الان
-                                                                        </button>
-                                                                        <button v-if="!video.is_allowed" target="_blank"
-                                                                                @click="check_video(video)"
-                                                                                class="btn btn-danger text-white float-left pull-left">
-                                                                            ادفع الان
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div><!----><!----></div>
+                                    <li v-for="video in videos">
+                                        <div class="element">
+                                            <div class="card shadow-lg--hover mt-1 shadow">
+                                                <div class="card-body p-2">
+                                                    <div class="px-1  text-right">
+                                                        <div class="pl-4">
+                                                            <h5 class="title text-info font-weight-bold">
+                                                                {{video.title}}</h5>
+                                                            <div class="h6 font-weight-300">
+                                                                <div v-html="getRate(video.total_rate)"></div>
+                                                            </div>
+                                                            <p>{{video.description}}</p>
+                                                            <b>عدد مرات المشاهدة</b>
+                                                            <span class="text-info"> {{video.view_number}} </span>
+                                                            <button class="btn btn-info float-left pull-left"
+                                                                    @click="showVideo(video)">
+                                                                شاهد الان
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </li>
-                                            </ul>
+                                                </div><!----><!----></div>
                                         </div>
                                     </li>
                                 </ul>
@@ -107,10 +77,6 @@
 </template>
 <script>
 
-
-    import 'video.js/dist/video-js.css'
-    import {videoPlayer} from 'vue-video-player'
-
     import apiServiesRoutes from '@/bootstrap/apiServiesRoutes';
 
     export default {
@@ -119,12 +85,11 @@
             return {
                 is_loading: true,
                 submenu: [],
+                videos: [],
                 current_video: null,
             }
         },
-        components: {
-            videoPlayer
-        },
+        components: {},
         mounted() {
             this.trigger();
             let id = this.$route.params.id;
@@ -142,49 +107,13 @@
                 let phone = localStorage.getItem('auth_mobile');
                 let auth_id = localStorage.getItem('auth_id');
                 axios
-                    .get(apiServiesRoutes.BASE_URL + apiServiesRoutes.FIND_COURSES + '/' + id, {
-                        params: {
-                            phone: phone,
-                            user_id: auth_id
-                        }
-
-                    })
+                    .get(apiServiesRoutes.BASE_URL + apiServiesRoutes.PAID_COURSE + '/' + auth_id, {})
                     .then(response => {
                         if (response.data.result == 'success') {
-                            vm.submenu = response.data.subcourse;
+                            vm.videos = response.data.data;
                         }
                         vm.is_loading = false;
                     })
-            },
-            check_video(video) {
-                let vm = this;
-                let sub_course_duration_id = video.sub_course_duration_id;
-                let phone = localStorage.getItem('auth_mobile');
-                let auth_id = localStorage.getItem('auth_id');
-
-                axios
-                    .get(apiServiesRoutes.BASE_URL + apiServiesRoutes.CHECK_PAY + '/' + phone + '/' + sub_course_duration_id, {}).then((response) => {
-                    console.log(response)
-                    if (response.data.result != 'success') {
-                        if (response.data.paid) {
-                            let video_url = response.data.data;
-                            vm.current_video = video_url;
-                            return;
-                        } else {
-                            let link = response.data.data;
-                            location.href = link;
-                            return;
-                        }
-                        alert('error')
-                        return;
-                        // let link = response.data.data.link;
-                        // let link = "http://google.com";
-                        // location.href = link;
-                    }
-                    alert('error');
-                    return;
-                });
-                // sub_course_duration_id
             },
             getRate(val) {
                 val = parseFloat(val);
@@ -265,6 +194,10 @@
                             </ul>`;
                 }
             },
+            showVideo(video) {
+                this.current_video = video.video_url;
+
+            }
         }
     };
 </script>
@@ -383,6 +316,7 @@
         top: 50%;
         left: 50%;
     }
+
     @media only screen and (max-width: 600px) {
         iframe {
             max-height: 200px;

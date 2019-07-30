@@ -16,43 +16,19 @@
                 </div>
             </div>
 
-            <!--            <ul class="navbar-nav navbar-nav-hover align-items-lg-center">-->
-            <!--                <base-dropdown class="nav-item " menu-classes="dropdown-menu-xl dropdown-menu-right">-->
-            <!--                    <a slot="title" href="#" class="nav-link text-right" data-toggle="dropdown" role="button">-->
-            <!--                        <i class="ni ni-ui-04 d-lg-none"></i>-->
-            <!--                        <b class="nav-link-inner&#45;&#45;text">ابدأ الان</b>-->
-            <!--                    </a>-->
-            <!--                    <div class="dropdown-menu-inner">-->
-            <!--                        <router-link :to="{name:'main_category'}" class="media d-flex align-items-center">-->
-            <!--                            <div class="icon icon-shape bg-gradient-info rounded-circle text-white">-->
-            <!--                                <i class="ni ni-vector"></i>-->
-            <!--                            </div>-->
-            <!--                            <div class="media-body text-right mr-3">-->
-            <!--                                <h6 class="heading text-info mb-md-1"> التصنيفات الرئيسية </h6>-->
-            <!--                                <p class="description d-none d-md-inline-block mb-0">-->
-            <!--                                    قم الان بمشاهدة التصيفات الرئيسية للموقع-->
-            <!--                                </p>-->
-            <!--                            </div>-->
-            <!--                        </router-link>-->
-            <!--                        &lt;!&ndash;                        <router-link :to="{name:'homes'}" class="media d-flex align-items-center">&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                            <div class="icon icon-shape bg-gradient-warning rounded-circle text-white">&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                                <i class="ni ni-ui-04"></i>&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                            </div>&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                            <div class="media-body ml-3">&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                                <h5 class="heading text-warning mb-md-1">Components</h5>&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                                <p class="description d-none d-md-inline-block mb-0">Learn how to use Argon&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                                    compiling Scss, change brand colors and more.</p>&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                            </div>&ndash;&gt;-->
-            <!--                        &lt;!&ndash;                        </router-link>&ndash;&gt;-->
-            <!--                    </div>-->
-            <!--                </base-dropdown>-->
-
-            <!--            </ul>-->
+            <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+                <li v-if="user_id && phone">
+                    <router-link :to="{name:'my_videos',params:{phone:phone,id:user_id}}" class="nav-link text-right" slot="title" role="button">
+                        <i class="ni ni-ui-04 d-lg-none"></i>
+                        <b class="nav-link-inner--text">مشاهدة فيديوهاتى ({{phone}}) </b>
+                    </router-link>
+                </li>
+            </ul>
             <ul class="navbar-nav text-right align-items-lg-center mr-lg-auto">
                 <li class="nav-item">
                     <slot v-if="phone">
-                        <a class="nav-link nav-link-icon">
-                            <span class="font-weight-bold">مرحبا, {{phone}}  </span>
+                        <a class="nav-link nav-link-icon" @click="logout()" style="cursor: pointer">
+                            <span class="font-weight-bold">الخروج  </span>
                         </a>
                     </slot>
                     <slot v-if="!phone">
@@ -95,12 +71,24 @@
         data() {
             return {
                 phone: null,
+                user_id: null,
             }
         },
         mounted() {
             let phone = localStorage.getItem('auth_mobile');
+            let auth_id = localStorage.getItem('auth_id');
             if (phone) {
                 this.phone = phone;
+            }
+            if (auth_id) {
+                this.user_id = auth_id;
+            }
+        },
+        methods: {
+            logout() {
+                localStorage.removeItem('auth_mobile');
+                localStorage.removeItem('auth_id');
+                location.reload()
             }
         }
     };
