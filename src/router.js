@@ -10,7 +10,7 @@ import Register from "./views/Register.vue";
 
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
     linkExactActiveClass: "active",
     routes: [
         {
@@ -20,6 +20,9 @@ export default new Router({
                 header: AppHeader,
                 default: Category,
                 footer: AppFooter
+            },
+            meta: {
+                guest: true
             }
         },
         {
@@ -28,6 +31,9 @@ export default new Router({
             components: {
                 header: AppHeader,
                 default: Login
+            },
+            meta: {
+                guest: true
             }
         },
         {
@@ -36,6 +42,9 @@ export default new Router({
             components: {
                 header: AppHeader,
                 default: Register
+            },
+            meta: {
+                guest: true
             }
         },
         {
@@ -45,6 +54,9 @@ export default new Router({
                 header: AppHeader,
                 default: PlayList,
                 footer: AppFooter
+            },
+            meta: {
+                guest: true
             }
         },
         {
@@ -54,6 +66,9 @@ export default new Router({
                 header: AppHeader,
                 default: MyVideos,
                 footer: AppFooter
+            },
+            meta: {
+                requiresAuth: true
             }
         },
     ],
@@ -65,3 +80,22 @@ export default new Router({
         }
     }
 });
+/**
+ * routes middleware
+ */
+router.beforeEach((to, from, next) => {
+    // close menu mobile
+    $('.collapse-close button').trigger('click');
+
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (localStorage.getItem('auth_id') == null) {
+            next({name: 'login', params: {nextUrl: to.fullPath}})
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+});
+
+export default router;
