@@ -165,7 +165,7 @@
                 axios
                     .get(apiServiesRoutes.BASE_URL + apiServiesRoutes.CHECK_PAY + '/' + phone + '/' + sub_course_duration_id, {}).then((response) => {
                     console.log(response)
-                    if (response.data.result != 'success') {
+                    if (response.data.result == 'success') {
                         if (response.data.paid) {
                             let video_url = response.data.data;
                             vm.current_video = video_url;
@@ -175,13 +175,13 @@
                             location.href = link;
                             return;
                         }
-                        alert('error')
+                        vm.$router.push({name:'login'})
                         return;
                         // let link = response.data.data.link;
                         // let link = "http://google.com";
                         // location.href = link;
                     }
-                    alert('error');
+                    vm.$router.push({name:'login'})
                     return;
                 });
                 // sub_course_duration_id
