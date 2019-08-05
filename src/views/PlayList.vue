@@ -38,6 +38,7 @@
                                                     height="600px"></iframe>
                                         </slot>
                                         <slot v-if="!current_video">
+                                            <img src="img/brand/blue.png" width="280px">
                                             <h2 class="font-weight-bold">ﻻ توجد بيانات</h2>
                                         </slot>
                                     </div>
@@ -48,12 +49,12 @@
                             <div class="mt-3">
                                 <slot v-if="is_loading">
                                     <h3 class="text-center">
-
                                         LOADING ...
                                     </h3>
                                 </slot>
                                 <ul>
-                                    <li v-for="(element,key) in submenu" class="li" :class="key == 0 ? 'opened' : ''">
+                                    <li v-for="(element,key) in submenu" class="li"
+                                        :id="'opened_'+element.sub_course_id">
                                         <h4 class="font-weight-bold">{{element.title}}</h4>
                                         <div class="arrow"></div>
                                         <div class="content">
@@ -72,7 +73,7 @@
                                                                         <p>{{video.description}}</p>
                                                                         <b>تكلفة الفيديو </b>
                                                                         <b class="text-info"> {{video.price}} <span
-                                                                                class="text-dark">د.ك</span></b>
+                                                                                class="text-dark">دوﻻر امريكي</span></b>
                                                                         <br>
                                                                         <b>عدد مرات المشاهدة</b>
                                                                         <b class="text-info"> {{video.view_number}} </b>
@@ -107,7 +108,6 @@
 </template>
 <script>
 
-
     import 'video.js/dist/video-js.css'
     import {videoPlayer} from 'vue-video-player'
 
@@ -129,6 +129,7 @@
             this.trigger();
             let id = this.$route.params.id;
             this.getDetails(id);
+
         },
         methods: {
             trigger() {
@@ -150,11 +151,19 @@
 
                     })
                     .then(response => {
-                        if (response.data.result == 'success') {
-                            vm.submenu = response.data.subcourse;
+                            if (response.data.result == 'success') {
+                                vm.submenu = response.data.subcourse;
+                            }
+                            vm.is_loading = false;
+
+                            let opened_id = vm.$route.query.opened_id;
+                            console.log(opened_id)
+                            if (opened_id)
+                                setTimeout(() => {
+                                    $(`#opened_${opened_id}`).trigger('click')
+                                }, 300);
                         }
-                        vm.is_loading = false;
-                    })
+                    )
             },
             check_video(video) {
                 let vm = this;
@@ -164,7 +173,6 @@
 
                 axios
                     .get(apiServiesRoutes.BASE_URL + apiServiesRoutes.CHECK_PAY + '/' + phone + '/' + sub_course_duration_id, {}).then((response) => {
-                    console.log(response)
                     if (response.data.result == 'success') {
                         if (response.data.paid) {
                             let video_url = response.data.data;
@@ -172,20 +180,37 @@
                             return;
                         } else {
                             let link = response.data.data;
-                            location.href = link;
+                            let current_location = location.href + `#opened_id=${video.sub_course_id}`;
+                            let url = link;
+                            // let url = link + `&redirect_url=${current_location}`;
+
+                            let params = current_location.split("#");
+                            console.log(current_location.split("#"));
+                            $.each(params, function (index, item) {
+                                // console.log(index)
+                                console.log(item)
+                                if (index == 0) {
+                                    url += `&redirect_url=${item}`;
+                                }
+                                if (index == 1) {
+                                    url += `&redirect_params=${item}`;
+                                }
+                                if (index == 2) {
+                                    url += `&${item}`;
+                                }
+                            });
+                            location.href = url;
                             return;
                         }
-                        vm.$router.push({name:'login'})
+                        vm.$router.push({name: 'login', query: {nextUrl: `playList/${vm.$route.params.id}`}});
                         return;
-                        // let link = response.data.data.link;
-                        // let link = "http://google.com";
-                        // location.href = link;
                     }
-                    vm.$router.push({name:'login'})
+                    vm.$router.push({name: 'login', query: {nextUrl: `playList/${vm.$route.params.id}`}});
                     return;
                 });
                 // sub_course_duration_id
-            },
+            }
+            ,
             getRate(val) {
                 val = parseFloat(val);
                 console.log(val)
@@ -264,11 +289,13 @@
                                 </li>
                             </ul>`;
                 }
-            },
+            }
+            ,
         }
-    };
+    }
+    ;
 </script>
-<style>
+<style scoped>
     /* Arrow Animation Styles Start */
 
     .li,
@@ -293,7 +320,7 @@
 
     .arrow:before {
         content: " ";
-        width: 25px;
+        width: 18px;
         height: 6px;
         right: 50%;
         margin-left: -25px;
@@ -305,7 +332,7 @@
 
     .arrow:after {
         content: " ";
-        width: 25px;
+        width: 18px;
         height: 6px;
         background-color: black;
         position: absolute;
@@ -383,6 +410,7 @@
         top: 50%;
         left: 50%;
     }
+
     @media only screen and (max-width: 600px) {
         iframe {
             max-height: 200px;

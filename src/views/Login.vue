@@ -69,7 +69,9 @@
         },
         components: {},
         mounted() {
-
+            if (this.$route.query.nextUrl) {
+                console.log('nextUrl')
+            }
 
         },
         methods: {
@@ -82,14 +84,20 @@
 
                 axios
                     .post(apiServiesRoutes.BASE_URL + apiServiesRoutes.LOGIN, params).then((response) => {
-                    console.log(response.data)
                     if (response.data.result == 'fail') {
                         $('#error_message').text(response.data.message)
                         return;
                     }
+
                     $('#error_message').text(response.data.message)
 
-                    vm.$router.push({name: 'main_category'});
+
+                    if (vm.$route.query.nextUrl) {
+                        console.log('nextUrl')
+                        vm.$router.push({path: vm.$route.query.nextUrl});
+                    } else {
+                        vm.$router.push({name: 'main_category'});
+                    }
                     localStorage.setItem('auth_mobile', response.data.data.mobile);
                     localStorage.setItem('auth_id', response.data.data.user_id);
                     location.reload()

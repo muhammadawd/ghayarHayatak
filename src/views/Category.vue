@@ -24,7 +24,7 @@
                                     <div>
                                         <badge type="info" rounded>استشارات</badge>
                                         <badge type="info" rounded>نفسية</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:2}}">
                                         شاهد المزيد
@@ -39,7 +39,7 @@
                                     <div>
                                         <badge type="info" rounded>استشارات</badge>
                                         <badge type="info" rounded>اطفال</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:1}}">
                                         شاهد المزيد
@@ -54,7 +54,7 @@
                                     <div>
                                         <badge type="info" rounded>دورات</badge>
                                         <badge type="info" rounded>تدريبية</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:4}}">
                                         شاهد المزيد
@@ -69,7 +69,7 @@
                                     <div>
                                         <badge type="info" rounded>استشارات</badge>
                                         <badge type="info" rounded>زواج</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:3}}">
                                         شاهد المزيد
@@ -84,7 +84,7 @@
                                     <div>
                                         <badge type="info" rounded>سلوكيات</badge>
                                         <badge type="info" rounded>الابراج</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:1109}}">
                                         شاهد المزيد
@@ -99,7 +99,7 @@
                                     <div>
                                         <badge type="info" rounded>سلوكيات</badge>
                                         <badge type="info" rounded>الابراج</badge>
-                                        <badge type="info" rounded>طبيب</badge>
+                                        
                                     </div>
                                     <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:8}}">
                                         شاهد المزيد
@@ -114,7 +114,7 @@
 <!--                                    <div>-->
 <!--                                        <badge type="info" rounded>سلوكيات</badge>-->
 <!--                                        <badge type="info" rounded>الابراج</badge>-->
-<!--                                        <badge type="info" rounded>طبيب</badge>-->
+<!--                                        -->
 <!--                                    </div>-->
 <!--                                    <router-link class="btn mt-4 btn-info" :to="{name:'play_list',params:{id:7}}">-->
 <!--                                        شاهد المزيد-->

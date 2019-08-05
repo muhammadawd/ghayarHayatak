@@ -201,7 +201,7 @@
         }
     };
 </script>
-<style>
+<style scoped>
     /* Arrow Animation Styles Start */
 
     .li,
